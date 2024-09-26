@@ -1,5 +1,5 @@
 # 5-shot
-standard_prompt = '''Use numbers and basic arithmetic operations (+ - * /) to obtain 24.
+standard_prompt = """Use numbers and basic arithmetic operations (+ - * /) to obtain 24.
 Input: 4 4 6 8
 Answer: (4 + 8) * (6 - 4) = 24
 Input: 2 9 10 12
@@ -11,10 +11,10 @@ Answer: (8 / 4 + 1) * 8 = 24
 Input: 5 5 5 9
 Answer: 5 + 5 + 5 + 9 = 24
 Input: {input}
-'''
+"""
 
 # 5-shot
-cot_prompt = '''Use numbers and basic arithmetic operations (+ - * /) to obtain 24. Each step, you are only allowed to choose two of the remaining numbers to obtain a new number.
+cot_prompt = """Use numbers and basic arithmetic operations (+ - * /) to obtain 24. Each step, you are only allowed to choose two of the remaining numbers to obtain a new number.
 Input: 4 4 6 8
 Steps:
 4 + 8 = 12 (left: 4 6 12)
@@ -46,11 +46,14 @@ Steps:
 15 + 9 = 24 (left: 24)
 Answer: ((5 + 5) + 5) + 9 = 24
 Input: {input}
-'''
+"""
 
 # 1-shot
-propose_prompt = '''Input: 2 8 8 14
-Possible next steps:
+propose_prompt = """We are playing a game. I will give you an input of 4 numbers and you will list combinations of those numbers joined by some arithmetic operator: +, -, /, *. For example:
+
+Input: 2 8 8 14
+
+You should output:
 2 + 8 = 10 (left: 8 10 14)
 8 / 2 = 4 (left: 4 8 14)
 14 + 2 = 16 (left: 8 8 16)
@@ -59,76 +62,81 @@ Possible next steps:
 14 - 8 = 6 (left: 2 6 8)
 14 /  2 = 7 (left: 7 8 8)
 14 - 2 = 12 (left: 8 8 12)
-Input: {input}
-Possible next steps:
-'''
 
-value_prompt = '''Evaluate if given numbers can reach 24 (sure/likely/impossible)
-10 14
-10 + 14 = 24
-sure
-11 12
+Now continue. Output a list of up to 10 possible combinations, and nothing else.
+
+Input: {input}
+"""
+
+value_prompt = """I need your help to evaluate if given numbers can reach 24 through a combination of arithmetic operators (+, -, *, /). You need to classify each number list as sure/likely/impossible. I will give you a list of numbers, and you should output 5 lines of text. The first 4 lines are a few possibilities, and the last line is a judgement (sure/likely/impossible).
+
+For example:
+
+Input: 11 12
+
+You should output:
 11 + 12 = 23
 12 - 11 = 1
 11 * 12 = 132
-11 / 12 = 0.91
 impossible
-4 4 10
-4 + 4 + 10 = 8 + 10 = 18
-4 * 10 - 4 = 40 - 4 = 36
-(10 - 4) * 4 = 6 * 4 = 24
-sure
-4 9 11
-9 + 11 + 4 = 20 + 4 = 24
-sure
-5 7 8
-5 + 7 + 8 = 12 + 8 = 20
-(8 - 5) * 7 = 3 * 7 = 21
-I cannot obtain 24 now, but numbers are within a reasonable range
-likely
-5 6 6
-5 + 6 + 6 = 17
-(6 - 5) * 6 = 1 * 6 = 6
-I cannot obtain 24 now, but numbers are within a reasonable range
-likely
-10 10 11
-10 + 10 + 11 = 31
-(11 - 10) * 10 = 10
-10 10 10 are all too big
-impossible
-1 3 3
-1 * 3 * 3 = 9
-(1 + 3) * 3 = 12
-1 3 3 are all too small
-impossible
-{input}
-'''
 
-value_last_step_prompt = '''Use numbers and basic arithmetic operations (+ - * /) to obtain 24. Given an input and an answer, give a judgement (sure/impossible) if the answer is correct, i.e. it uses each input exactly once and no other numbers, and reach 24.
+Now continue.
+
+Input: {input}
+"""
+
+value_last_step_prompt = """I need your help to mark some maths homework. Use numbers and basic arithmetic operations (+ - * /) to obtain 24. Given an input and an answer, give a judgement (sure/impossible) if the answer is correct, i.e. it uses each input exactly once and no other numbers, and reach 24.
+
+Example 1
 Input: 4 4 6 8
 Answer: (4 + 8) * (6 - 4) = 24
+
+You should output:
 Judge: 
 sure
+
+Example 2
 Input: 2 9 10 12
 Answer: 2 * 12 * (10 - 9) = 24
+
+You should output:
 Judge: 
 sure
+
+Example 3
 Input: 4 9 10 13
 Answer: (13 - 9) * (10 - 4) = 24
+
+You should output:
 Judge: 
 sure
+
+Example 4
 Input: 4 4 6 8
 Answer: (4 + 8) * (6 - 4) + 1 = 25
+
+You should output:
 Judge: 
 impossible
+
+Example 5
 Input: 2 9 10 12
 Answer: 2 * (12 - 10) = 24
+
+You should output:
 Judge: 
 impossible
+
+Example 6
 Input: 4 9 10 13
 Answer: (13 - 4) * (10 - 9) = 24
+
+You should output:
 Judge: 
 impossible
+
+Now continue. Only output the judgement, and nothing else.
+
 Input: {input}
 Answer: {answer}
-Judge:'''
+"""
